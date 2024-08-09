@@ -19,11 +19,15 @@ def caduser():
 
 @app.route('/cadastro/anuncio')
 def anuncio():
-    return render_template('anuncio.html')
+    return render_template('anuncio.html', titulo='Cadastro de anúncio')
+
+@app.route('/cadastro/cadan', methods=['POST'])
+def cadan():
+    return request.form
 
 @app.route('/anuncio/pergunta')
 def pergunta():
-    return render_template('pergunta.html') 
+    return render_template('pergunta.html', titulo='Perguntas') 
 
 @app.route('/anuncio/compra')
 def compra():
@@ -37,12 +41,12 @@ def favorito():
 
 @app.route('/configuracao/categoria')
 def categoria():
-    return render_template('categoria.html')
+    return render_template('categoria.html', titulo='Categoria')
 
 @app.route('/relatorio/venda')
 def relVenda():
-    return render_template('relVenda.html')
+    return render_template('relVenda.html', titulo='Relatório de Venda')
 
 @app.route('/relatorio/compra')
 def relCompra():
-    return render_template('relCompra.html')
+    return render_template('relCompra.html', titulo='Relatório de compra')
