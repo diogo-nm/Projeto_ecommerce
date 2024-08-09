@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My test - Compras e Vendas - {{titulo}}</title>
+</head>
+
+<body>
+    <h1>{{titulo}}</h1>
+
+    <a href={{url_for("index")}}> Home |</a>
+    <a href={{url_for("usuario")}}> Cadastro Usuario |</a>
+    <a href={{url_for("anuncio")}}> Cadastro Anuncio |</a>
+    <a href={{url_for("pergunta")}}> Perguntas |</a>
+    <a href={{url_for("categoria")}}> Categorias |</a>
+    <a href={{url_for("relVenda")}}> Relatório de venda |</a>
+    <a href={{url_for("relCompra")}}> Relatório de compra</a>
+
+    <form action="categprod" method="post">
+        
+        <label for="categ">Categoria desejada</label>
+        <input type="text" id="categ" name="categ"><br>
+
+        <input type="submit" value="Pesquisar">
+
+    </form>
+
+</body>
+
+</html>
+
