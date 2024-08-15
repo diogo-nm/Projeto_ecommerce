@@ -11,19 +11,40 @@
     <a href={{url_for("index")}}> Home |</a>
     <a href={{url_for("usuario")}}> Cadastro Usuario |</a>
     <a href={{url_for("anuncio")}}> Cadastro Anuncio |</a>
-    <a href={{url_for("pergunta")}}> Perguntas |</a>
     <a href={{url_for("categoria")}}> Categorias |</a>
-    <a href={{url_for("relVenda")}}> Relatório de venda |</a>
-    <a href={{url_for("relCompra")}}> Relatório de compra</a>
-
-    <form action="categprod" method="post">
+    
+    <h4>Cadastro de {{titulo}}</h4>
+    
+    <form action="/categoria/criar" method="post">
         
-        <label for="categ">Categoria desejada</label>
-        <input type="text" id="categ" name="categ"><br>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome"><br>
 
-        <input type="submit" value="Pesquisar">
+        <label for="desc">Descricao</label>
+        <input type="text" id="desc" name="desc"><br>
+
+        <input type="submit" value="Cadastrar">
 
     </form>
+
+    <h4>Lista de {{titulo}}</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descricao</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+            <tr>
+                <td>{{ categoria.nome }}</td>
+                <td>{{ categoria.desc }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 
 </body>
 
