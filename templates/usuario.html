@@ -2,23 +2,20 @@
 <html>
 
 <head>
-    <title>My test - Compras e Vendas - {{titulo}}</title>
+    <title>My test - Compras e Vendas - Cadastro de {{titulo}}</title>
 </head>
 
 <body>
-    <h1>{{titulo}}</h1>
+    <h1>Cadastro de {{titulo}}</h1>
 
     <a href={{url_for("index")}}> Home |</a>
     <a href={{url_for("usuario")}}> Cadastro Usuario |</a>
     <a href={{url_for("anuncio")}}> Cadastro Anuncio |</a>
-    <a href={{url_for("pergunta")}}> Perguntas |</a>
     <a href={{url_for("categoria")}}> Categorias |</a>
-    <a href={{url_for("relVenda")}}> Relatório de venda |</a>
-    <a href={{url_for("relCompra")}}> Relatório de compra</a>
 
-    <form action="caduser" method="post">
+    <form action="/usuario/criar" method="post">
         
-        <label for="user">Nome de usuário</label>
+        <label for="user">Nome do usuário</label>
         <input type="text" id="user" name="user"><br>
 
         <label for="email">Email</label>
@@ -27,9 +24,38 @@
         <label for="senha">Confirmar senha</label>
         <input type="text" id="senha" name="senha"><br>
 
+        <label for="end">Endereço</label>
+        <input type="text" id="end" name="end"><br>
+
         <input type="submit" value="Cadastrar">
 
     </form>
+
+    <h4>Lista de {{titulo}}</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Senha</th>
+                <th>Endereço</th>
+                <th>Editar</th>
+                <th>Deletar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.nome }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.senha }}</td>
+                    <td>{{ usuario.end }}</td>
+                    <td><a href="{{ url_for("editarusuario", id=usuario.id) }}">Editar?</a></td>
+                    <td><a href="{{ url_for("deletarusuario", id=usuario.id) }}">Deletar?</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 </body>
 
