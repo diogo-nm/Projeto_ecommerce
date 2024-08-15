@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My test - Compras e Vendas - Edicao de {{titulo}}</title>
+</head>
+
+<body>
+    <h1>Edicao de {{titulo}}</h1>
+
+    <a href={{url_for("index")}}> Home |</a>
+    <a href={{url_for("usuario")}}> Cadastro Usuario |</a>
+    <a href={{url_for("anuncio")}}> Cadastro Anuncio |</a>
+    <a href={{url_for("categoria")}}> Categorias |</a>
+
+    <form action="/usuario/editar/{{ usuario.id }}" method="post">
+        
+        <label for="user">Nome do usuário</label>
+        <input type="text" id="user" name="user" value="{{usuario.nome}}"><br>
+
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" value="{{usuario.email}}"><br>
+
+        <label for="senha">Confirmar senha</label>
+        <input type="text" id="senha" name="senha" value="{{usuario.senha}}"><br>
+
+        <label for="end">Endereço</label>
+        <input type="text" id="end" name="end" value="{{usuario.end}}"><br>
+
+        <input type="submit" value="Alterar">
+
+    </form>
+
+    <a href={{url_for("usuario")}}>Cancelar</a>
+
+</body>
+
+</html>
+
