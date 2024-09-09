@@ -3,60 +3,87 @@
 
 <head>
     <title>My test - Compras e Vendas - Cadastro de {{titulo}}</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
 </head>
 
 <body>
-    <h1>Cadastro de {{titulo}}</h1>
 
-    <a href={{url_for("index")}}> Home |</a>
-    <a href={{url_for("usuario")}}> Cadastro Usuario |</a>
-    <a href={{url_for("anuncio")}}> Cadastro Anuncio |</a>
-    <a href={{url_for("categoria")}}> Categorias |</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <div class="navbar-nav">
+                <a class="nav-link" href={{url_for("index")}}>Home</a>
+                <a class="nav-link active" href={{url_for("usuario")}}>Cadastro Usuário</a>
+                <a class="nav-link" href={{url_for("anuncio")}}>Cadastro Anúncio</a>
+                <a class="nav-link" href={{url_for("categoria")}}>Categorias</a>
+                <a class="nav-link" href={{url_for("logout")}}>Logout</a>
+            </div>
+        </div>
+    </nav>
 
-    <form action="/usuario/criar" method="post">
-        
-        <label for="user">Nome do usuário</label>
-        <input type="text" id="user" name="user"><br>
+    <div class="container">
+        <div class="page-header">
+            <h1>Cadastro de {{titulo}}</h1>
+        </div>
 
-        <label for="email">Email</label>
-        <input type="text" id="email" name="email"><br>
+        <form action="/usuario/criar" method="post">
+            <div class="form-group">
+                <label for="user">Nome do usuário</label>
+                <input type="text" class="form-control" id="user" name="user">
+            </div>
 
-        <label for="senha">Confirmar senha</label>
-        <input type="text" id="senha" name="senha"><br>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" id="email" name="email">
+                <small id="emailHelp" class="form-text text-muted">Nós nunca compartilharemos o seu E-mail com ninguém.</small>
+            </div>    
 
-        <label for="end">Endereço</label>
-        <input type="text" id="end" name="end"><br>
+            <div class="form-group">
+                <label for="senha">Digite sua senha</label>
+                <input type="text" class="form-control" id="senha" name="senha">
+            </div>
 
-        <input type="submit" value="Cadastrar">
+            <div class="form-group">
+                <label for="end">Endereço</label>
+                <input type="text" class="form-control" id="end" name="end">
+            </div>
 
-    </form>
+            <div style="margin: 10px;">
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                <button type="reset" class="btn btn-primary">Limpar</button>
+            </div>
+            
+        </form>
+    </div>
 
-    <h4>Lista de {{titulo}}</h4>
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>E-mail</th>
-                <th>Senha</th>
-                <th>Endereço</th>
-                <th>Editar</th>
-                <th>Deletar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usuario in usuarios %}
+    <div class="container">
+        <div class="page-header">
+            <h1>Lista de {{titulo}}</h1>
+        </div>
+        <table class="table table-striped table-responsive table-bordered">
+            <thead class="thread-default">
                 <tr>
-                    <td>{{ usuario.nome }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.senha }}</td>
-                    <td>{{ usuario.end }}</td>
-                    <td><a href="{{ url_for("editarusuario", id=usuario.id) }}">Editar?</a></td>
-                    <td><a href="{{ url_for("deletarusuario", id=usuario.id) }}">Deletar?</a></td>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Senha</th>
+                    <th>Endereço</th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.nome }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.senha }}</td>
+                        <td>{{ usuario.end }}</td>
+                        <td><a href="{{ url_for("editarusuario", id=usuario.id) }}" class="btn btn-warning">Editar?</a></td>
+                        <td><a href="{{ url_for("deletarusuario", id=usuario.id) }}" class="btn btn-danger">Deletar?</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
