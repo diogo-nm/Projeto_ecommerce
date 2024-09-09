@@ -3,66 +3,86 @@
 
 <head>
     <title>My test - Compras e Vendas - {{titulo}}</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
 </head>
 
 <body>
-    <h1>{{titulo}}</h1>
 
-    <a href={{url_for("index")}}> Home |</a>
-    <a href={{url_for("usuario")}}> Cadastro Usuario |</a>
-    <a href={{url_for("anuncio")}}> Cadastro Anuncio |</a>
-    <a href={{url_for("categoria")}}> Categorias |</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <div class="navbar-nav">
+                <a class="nav-link" href={{url_for("index")}}>Home</a>
+                <a class="nav-link" href={{url_for("usuario")}}>Cadastro Usuário</a>
+                <a class="nav-link active" href={{url_for("anuncio")}}>Cadastro Anúncio</a>
+                <a class="nav-link" href={{url_for("categoria")}}>Categorias</a>
+                <a class="nav-link" href={{url_for("logout")}}>Logout</a>
+            </div>
+        </div>
+    </nav>
 
-    <h4>Cadastro de {{titulo}}</h4>
+    <h4 class="mb-4">Cadastro de {{titulo}}</h4>
 
-    <form action="/anuncio/criar" method="post">
-        
-        <label for="nome">Nome de produto</label>
-        <input type="text" id="nome" name="nome"><br>
-
-        <label for="desc">Descrição</label>
-        <textarea rows="4" cols="50" id="desc" name="desc"></textarea><br>
-
-        <label for="qtd">Quantidade</label>
-        <input type="text" id="qtd" name="qtd"><br>
-
-        <label for="preco">Preco</label>
-        <input type="text" id="preco" name="preco"><br>
-
-        <label for="cat">Categoria</label>
-        <select id="cat" name="cat">
-            {% for categoria in categorias %}
-                <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
-            {% endfor %}
-        </select><br>
-
-        <label for="usu">Usuario</label>
-        <input type="text" id="usu" name="usu"><br>
-        
-        <input type="submit" value="Cadastrar">
-
+    <form action="/anuncio/criar" method="post" class="bg-white p-4 rounded shadow-sm">
+    
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome de produto</label>
+            <input type="text" class="form-control" id="nome" name="nome">
+        </div>
+    
+        <div class="mb-3">
+            <label for="desc" class="form-label">Descrição</label>
+            <textarea rows="4" cols="50" class="form-control" id="desc" name="desc"></textarea>
+        </div>
+    
+        <div class="mb-3">
+            <label for="qtd" class="form-label">Quantidade</label>
+            <input type="text" class="form-control" id="qtd" name="qtd">
+        </div>
+    
+        <div class="mb-3">
+            <label for="preco" class="form-label">Preço</label>
+            <input type="text" class="form-control" id="preco" name="preco">
+        </div>
+    
+        <div class="mb-3">
+            <label for="cat" class="form-label">Categoria</label>
+            <select id="cat" name="cat" class="form-select">
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="mb-3">
+            <label for="usu" class="form-label">Usuário</label>
+            <input type="text" class="form-control" id="usu" name="usu">
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    
     </form>
-
-    <h4>Lista de {{titulo}}</h4>
-    <table>
-        <thead>
+    
+    <h4 class="mt-5 mb-4">Lista de {{titulo}}</h4>
+    
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
             <tr>
-                <th>Nome</th>
-                <th>Desc</th>
-                <th>Qtd</th>
-                <th>Preco</th>
-                <th>Categoria</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Categoria</th>
             </tr>
         </thead>
         <tbody>
             {% for anuncio in anuncios %}
-                <tr>
-                    <td>{{ anuncio.nome }}</td>
-                    <td>{{ anuncio.desc }}</td>
-                    <td>{{ anuncio.qtd }}</td>
-                    <td>{{ anuncio.preco }}</td>
-                    <td>{{ anuncio.cat_id }}</td>
-                </tr>
+            <tr>
+                <td>{{ anuncio.nome }}</td>
+                <td>{{ anuncio.desc }}</td>
+                <td>{{ anuncio.qtd }}</td>
+                <td>{{ anuncio.preco }}</td>
+                <td>{{ anuncio.cat_id }}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
