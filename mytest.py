@@ -5,15 +5,23 @@ from flask import request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask import redirect
 from flask import url_for
+from flask_login import (current_user, LoginManager, login_user, logout_user, login_required)
+import hashlib
 import pymysql
 
 pymysql.install_as_MySQLdb()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://testuser:021022@localhost:3306/mydb'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://diogoNM:db021022@diogoNM.mysql.pythonanywhere-services.com:3306/diogoNM$mydb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+app.secret_key = '012801'
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 class Usuario(db.Model):
     __tablename__ = "usuario"
@@ -28,6 +36,18 @@ class Usuario(db.Model):
         self.email = email
         self.senha = senha
         self.end = end
+
+    def is_authenticated(self):
+        return True
+    
+    def is_active(self):
+        return True
+    
+    def is_anonymous(self):
+        return False
+    
+    def get_id(self):
+        return str(self.id)
 
 class Categoria(db.Model):
     __tablename__ = "categoria"
@@ -61,6 +81,32 @@ class Anuncio(db.Model):
 def paginanaoencontrada(error):
     return render_template('pgnaoencontrada.html')
 
+@login_manager.user_loader
+def load_user(id):
+    return Usuario.query.get(id)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        senha = hashlib.sha512(str(request.form.get('senha')).encode('utf-8')).hexdigest()
+
+        user = Usuario.query.filter_by(email=email, senha=senha).first()
+
+        if user:
+            login_user(user)
+            return redirect(url_for('index'))
+        
+        else:
+            return redirect(url_for('login'))
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -71,23 +117,26 @@ def usuario():
 
 @app.route('/usuario/criar', methods=['POST'])
 def criarusuario():
-    usuario = Usuario(request.form.get('user'), request.form.get('email'), request.form.get('senha'), request.form.get('end'))
+    hash = hashlib.sha512(str(request.form.get('senha')).encode('utf-8')).hexdigest()
+    usuario = Usuario(request.form.get('user'), request.form.get('email'), hash, request.form.get('end'))
     db.session.add(usuario)
     db.session.commit()
     return redirect(url_for('usuario'))
 
 @app.route('/usuario/detalhar/<int:id>')
+@login_required
 def buscausuario(id):
     usuario = Usuario.query.get(id)
     return usuario.nome
 
 @app.route('/usuario/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
 def editarusuario(id):
     usuario = Usuario.query.get(id)
     if request.method == 'POST':
         usuario.nome = request.form.get('nome')
         usuario.email = request.form.get('email')
-        usuario.senha = request.form.get('senha')
+        usuario.senha = hashlib.sha512(str(request.form.get('senha')).encode('utf-8')).hexdigest()
         usuario.end = request.form.get('end')
 
         db.session.add(usuario)
@@ -96,14 +145,43 @@ def editarusuario(id):
     
     return render_template('edusuario.html', usuario = usuario, titulo='Usuario')
 
-@app.route('/usuario/deletar/<int:id>')
-def deletarusuario(id):
+@app.route('/usuario/confirmar_delecao/<int:id>', methods=['GET', 'POST'])
+def confirmar_delecao(id):
     usuario = Usuario.query.get(id)
-    db.session.delete(usuario)
-    db.session.commit()
-    return redirect(url_for('usuario'))
+    if not usuario:
+        return redirect(url_for('usuario'))
+    
+    anuncios = Anuncio.query.filter_by(usu_id=id).all()
+
+    if request.method == 'POST':
+        deletar_anuncios = request.form.get('deletar_anuncios', 'false') == 'true'
+
+        try:
+            if deletar_anuncios:
+                # Deletar todos os anúncios associados ao usuário
+                Anuncio.query.filter_by(usu_id=id).delete()
+            
+            # Deletar o usuário
+            if usuario:
+                db.session.delete(usuario)
+                db.session.commit()
+            
+            return redirect(url_for('usuario'))
+        
+        except Exception as e:
+            db.session.rollback()  # Reverter qualquer mudança se ocorrer um erro
+            print(f"Erro ao deletar usuário: {e}")
+            return "Não é possível deletar usuário, pois o mesmo possui anúncios em cadastro ainda", 500
+    
+    return render_template('confirmar_delecao.html', usuario=usuario, anuncios=anuncios)
+
+@app.route('/usuario/deletar/<int:id>')
+@login_required
+def deletarusuario(id):
+    return redirect(url_for('confirmar_delecao', id=id))
 
 @app.route('/cadastro/anuncio')
+@login_required
 def anuncio():
     return render_template('anuncio.html', anuncios = Anuncio.query.all(), categorias = Categoria.query.all(), titulo='Anúncio')
 
@@ -129,6 +207,7 @@ def favorito():
     return "<h3>Inserido aos favoritos</h3>"
 
 @app.route('/configuracao/categoria')
+@login_required
 def categoria():
     return render_template('categoria.html', categorias = Categoria.query.all(), titulo='Categoria')
 
