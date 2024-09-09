@@ -3,35 +3,40 @@
 
 <head>
     <title>My test - Compras e Vendas - Edicao de {{titulo}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 </head>
 
 <body>
-    <h1>Edicao de {{titulo}}</h1>
 
-    <a href={{url_for("index")}}> Home |</a>
-    <a href={{url_for("usuario")}}> Cadastro Usuario |</a>
-    <a href={{url_for("anuncio")}}> Cadastro Anuncio |</a>
-    <a href={{url_for("categoria")}}> Categorias |</a>
+    <h4 class="mb-4">Edição de {{titulo}}</h4>
 
-    <form action="/usuario/editar/{{ usuario.id }}" method="post">
-        
-        <label for="user">Nome do usuário</label>
-        <input type="text" id="user" name="user" value="{{usuario.nome}}"><br>
-
-        <label for="email">Email</label>
-        <input type="text" id="email" name="email" value="{{usuario.email}}"><br>
-
-        <label for="senha">Confirmar senha</label>
-        <input type="text" id="senha" name="senha" value="{{usuario.senha}}"><br>
-
-        <label for="end">Endereço</label>
-        <input type="text" id="end" name="end" value="{{usuario.end}}"><br>
-
-        <input type="submit" value="Alterar">
-
+    <form action="/usuario/editar/{{ usuario.id }}" method="post" class="bg-white p-4 rounded shadow-sm">
+    
+        <div class="mb-3">
+            <label for="user" class="form-label">Nome do usuário</label>
+            <input type="text" class="form-control" id="user" name="user" value="{{usuario.nome}}">
+        </div>
+    
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email" value="{{usuario.email}}">
+        </div>
+    
+        <div class="mb-3">
+            <label for="senha" class="form-label">Confirmar senha</label>
+            <input type="password" class="form-control" id="senha" name="senha" value="{{usuario.senha}}">
+        </div>
+    
+        <div class="mb-3">
+            <label for="end" class="form-label">Endereço</label>
+            <input type="text" class="form-control" id="end" name="end" value="{{usuario.end}}">
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Alterar</button>
+        <a href={{url_for("usuario")}} class="btn btn-secondary ms-2">Cancelar</a>
+    
     </form>
-
-    <a href={{url_for("usuario")}}>Cancelar</a>
+    
 
 </body>
 
